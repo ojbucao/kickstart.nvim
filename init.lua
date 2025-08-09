@@ -298,7 +298,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-  
+
   -- Essential plugins from previous config
   'tpope/vim-fugitive', -- Git commands
   'github/copilot.vim', -- GitHub Copilot
@@ -308,21 +308,56 @@ require('lazy').setup({
   'tpope/vim-unimpaired', -- Bracket mappings
   'bronson/vim-trailing-whitespace', -- Highlight trailing whitespace
   'prendradjaja/vim-vertigo', -- Vertical navigation
-  
+
   -- Flash.nvim for word/character jumping
   {
     'folke/flash.nvim',
     event = 'VeryLazy',
     opts = {},
     keys = {
-      { 's', mode = { 'n', 'x', 'o' }, function() require('flash').jump() end, desc = 'Flash' },
-      { 'S', mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end, desc = 'Flash Treesitter' },
-      { 'r', mode = 'o', function() require('flash').remote() end, desc = 'Remote Flash' },
-      { 'R', mode = { 'o', 'x' }, function() require('flash').treesitter_search() end, desc = 'Treesitter Search' },
-      { '<c-s>', mode = { 'c' }, function() require('flash').toggle() end, desc = 'Toggle Flash Search' },
+      {
+        's',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').jump()
+        end,
+        desc = 'Flash',
+      },
+      {
+        'S',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').treesitter()
+        end,
+        desc = 'Flash Treesitter',
+      },
+      {
+        'r',
+        mode = 'o',
+        function()
+          require('flash').remote()
+        end,
+        desc = 'Remote Flash',
+      },
+      {
+        'R',
+        mode = { 'o', 'x' },
+        function()
+          require('flash').treesitter_search()
+        end,
+        desc = 'Treesitter Search',
+      },
+      {
+        '<c-s>',
+        mode = { 'c' },
+        function()
+          require('flash').toggle()
+        end,
+        desc = 'Toggle Flash Search',
+      },
     },
   },
-  
+
   -- Testing plugins
   {
     'vim-test/vim-test',
@@ -333,27 +368,27 @@ require('lazy').setup({
       -- Set test strategy - use vimux for tmux integration
       -- Change to 'neovim' if you prefer built-in terminal
       vim.g['test#strategy'] = 'vimux'
-      
+
       -- Ruby/Rails test configuration
       vim.g['test#ruby#rspec#executable'] = 'bundle exec rspec'
       vim.g['test#ruby#rspec#options'] = '--format documentation'
       vim.g['test#ruby#minitest#executable'] = 'bundle exec rails test'
-      
+
       -- Rust test configuration
       vim.g['test#rust#cargo#executable'] = 'cargo test'
       vim.g['test#rust#cargo#test_options'] = '-- --nocapture'
-      
+
       -- JavaScript test configuration
       vim.g['test#javascript#jest#executable'] = 'npm test'
       vim.g['test#javascript#mocha#executable'] = 'npm test'
-      
+
       -- Test keybindings (combined from both sections)
       vim.keymap.set('n', '<leader>tn', '<cmd>TestNearest<CR>', { desc = 'Test nearest' })
       vim.keymap.set('n', '<leader>tf', '<cmd>TestFile<CR>', { desc = 'Test file' })
       vim.keymap.set('n', '<leader>ts', '<cmd>TestSuite<CR>', { desc = 'Test suite' })
       vim.keymap.set('n', '<leader>tl', '<cmd>TestLast<CR>', { desc = 'Test last' })
       vim.keymap.set('n', '<leader>tv', '<cmd>TestVisit<CR>', { desc = 'Test visit' })
-      
+
       -- Alternative shortcuts
       vim.keymap.set('n', '<leader>t', '<cmd>TestNearest<CR>', { desc = 'Run nearest test' })
       vim.keymap.set('n', '<leader>T', '<cmd>TestFile<CR>', { desc = 'Run test file' })
@@ -362,7 +397,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>g', '<cmd>TestVisit<CR>', { desc = 'Go to test file' })
     end,
   },
-  
+
   -- Tmux integration for sending commands (like your old tslime setup)
   {
     'preservim/vimux',
@@ -370,20 +405,20 @@ require('lazy').setup({
       -- Vimux configuration
       vim.g.VimuxHeight = '30'
       vim.g.VimuxOrientation = 'v'
-      
+
       -- Additional keybindings for tmux interaction
       vim.keymap.set('n', '<leader>vp', '<cmd>VimuxPromptCommand<CR>', { desc = 'Prompt for tmux command' })
       vim.keymap.set('n', '<leader>vl', '<cmd>VimuxRunLastCommand<CR>', { desc = 'Run last tmux command' })
       vim.keymap.set('n', '<leader>vq', '<cmd>VimuxCloseRunner<CR>', { desc = 'Close tmux runner' })
     end,
   },
-  
+
   -- Ruby/Rails plugins
   'tpope/vim-rails', -- Rails navigation and commands
   'vim-ruby/vim-ruby', -- Better Ruby support
   'tpope/vim-bundler', -- Bundler integration
   'tpope/vim-endwise', -- Auto-end for Ruby blocks
-  
+
   -- Rust plugins
   {
     'mrcjkb/rustaceanvim',
@@ -400,11 +435,21 @@ require('lazy').setup({
         server = {
           on_attach = function(client, bufnr)
             -- Rust-specific keymaps
-            vim.keymap.set('n', '<leader>rc', function() vim.cmd.RustLsp 'openCargo' end, { buffer = bufnr, desc = 'Open Cargo.toml' })
-            vim.keymap.set('n', '<leader>rd', function() vim.cmd.RustLsp 'openDocs' end, { buffer = bufnr, desc = 'Open docs.rs' })
-            vim.keymap.set('n', '<leader>rr', function() vim.cmd.RustLsp 'run' end, { buffer = bufnr, desc = 'Run' })
-            vim.keymap.set('n', '<leader>ra', function() vim.cmd.RustLsp 'codeAction' end, { buffer = bufnr, desc = 'Code Action' })
-            vim.keymap.set('n', 'K', function() vim.cmd.RustLsp { 'hover', 'actions' } end, { buffer = bufnr, desc = 'Hover Actions' })
+            vim.keymap.set('n', '<leader>rc', function()
+              vim.cmd.RustLsp 'openCargo'
+            end, { buffer = bufnr, desc = 'Open Cargo.toml' })
+            vim.keymap.set('n', '<leader>rd', function()
+              vim.cmd.RustLsp 'openDocs'
+            end, { buffer = bufnr, desc = 'Open docs.rs' })
+            vim.keymap.set('n', '<leader>rr', function()
+              vim.cmd.RustLsp 'run'
+            end, { buffer = bufnr, desc = 'Run' })
+            vim.keymap.set('n', '<leader>ra', function()
+              vim.cmd.RustLsp 'codeAction'
+            end, { buffer = bufnr, desc = 'Code Action' })
+            vim.keymap.set('n', 'K', function()
+              vim.cmd.RustLsp { 'hover', 'actions' }
+            end, { buffer = bufnr, desc = 'Hover Actions' })
           end,
           default_settings = {
             ['rust-analyzer'] = {
@@ -440,7 +485,7 @@ require('lazy').setup({
       }
     end,
   },
-  
+
   -- JavaScript/TypeScript/HTML enhancements
   {
     'windwp/nvim-ts-autotag', -- Auto close/rename HTML tags
@@ -469,14 +514,24 @@ require('lazy').setup({
     config = function()
       require('package-info').setup()
       -- Package info keymaps
-      vim.keymap.set('n', '<leader>ns', function() require('package-info').show() end, { desc = 'Show package info' })
-      vim.keymap.set('n', '<leader>nh', function() require('package-info').hide() end, { desc = 'Hide package info' })
-      vim.keymap.set('n', '<leader>nu', function() require('package-info').update() end, { desc = 'Update package' })
-      vim.keymap.set('n', '<leader>nd', function() require('package-info').delete() end, { desc = 'Delete package' })
-      vim.keymap.set('n', '<leader>ni', function() require('package-info').install() end, { desc = 'Install package' })
+      vim.keymap.set('n', '<leader>ns', function()
+        require('package-info').show()
+      end, { desc = 'Show package info' })
+      vim.keymap.set('n', '<leader>nh', function()
+        require('package-info').hide()
+      end, { desc = 'Hide package info' })
+      vim.keymap.set('n', '<leader>nu', function()
+        require('package-info').update()
+      end, { desc = 'Update package' })
+      vim.keymap.set('n', '<leader>nd', function()
+        require('package-info').delete()
+      end, { desc = 'Delete package' })
+      vim.keymap.set('n', '<leader>ni', function()
+        require('package-info').install()
+      end, { desc = 'Install package' })
     end,
   },
-  
+
   -- Docker support
   {
     'dgrbrady/nvim-docker',
@@ -1062,10 +1117,10 @@ require('lazy').setup({
           },
         },
         rubocop = {}, -- Ruby linter/formatter
-        
+
         -- Rust (handled by rustaceanvim, but keeping rust_analyzer config for completeness)
         -- rust_analyzer is configured via rustaceanvim plugin
-        
+
         -- JavaScript/TypeScript
         ts_ls = {
           settings = {
@@ -1087,20 +1142,20 @@ require('lazy').setup({
             workingDirectory = { mode = 'auto' },
           },
         },
-        
+
         -- HTML/CSS
         html = {},
         cssls = {},
         emmet_ls = {
           filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less' },
         },
-        
+
         -- JSON
         jsonls = {},
-        
+
         -- YAML
         yamlls = {},
-        
+
         -- Docker
         dockerls = {},
         docker_compose_language_service = {},
@@ -1311,7 +1366,7 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       require('gruvbox').setup {
-        contrast = '', -- can be "hard", "soft" or empty string (medium/default)
+        contrast = 'soft', -- can be "hard", "soft" or empty string (medium/default)
         palette_overrides = {},
         overrides = {},
         dim_inactive = false,
@@ -1369,9 +1424,29 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 
-        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
-        'ruby', 'rust', 'javascript', 'typescript', 'tsx', 'json', 'yaml', 'css', 'scss', 'toml', 'dockerfile'
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'ruby',
+        'rust',
+        'javascript',
+        'typescript',
+        'tsx',
+        'json',
+        'yaml',
+        'css',
+        'scss',
+        'toml',
+        'dockerfile',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -1444,7 +1519,7 @@ require('lazy').setup({
 
 -- Function to switch between source and spec files
 function SwitchToSpec()
-  local file = vim.fn.expand('%')
+  local file = vim.fn.expand '%'
   local target
   if string.match(file, 'spec/') then
     -- From spec to source
@@ -1466,20 +1541,17 @@ vim.api.nvim_create_user_command('CleanDiff', '%!clean_diff.rb', {})
 
 -- RubocopFix command
 vim.api.nvim_create_user_command('RubocopFix', function()
-  vim.cmd('write')
-  vim.cmd('silent !rubocop -A %')
-  vim.cmd('edit')
+  vim.cmd 'write'
+  vim.cmd 'silent !rubocop -A %'
+  vim.cmd 'edit'
 end, {})
 
 -- RubocopFixSel command for visual selection
 vim.api.nvim_create_user_command('RubocopFixSel', function(opts)
   local start_line = opts.line1
   local end_line = opts.line2
-  local file_path = vim.fn.shellescape(vim.fn.expand('%:p'))
-  local cmd = string.format(
-    '%d,%d! rubocop -A --stdin %s | awk \'/^=/{flag=!flag;next}flag\'',
-    start_line, end_line, file_path
-  )
+  local file_path = vim.fn.shellescape(vim.fn.expand '%:p')
+  local cmd = string.format("%d,%d! rubocop -A --stdin %s | awk '/^=/{flag=!flag;next}flag'", start_line, end_line, file_path)
   vim.cmd(cmd)
 end, { range = true })
 
