@@ -2,15 +2,19 @@
 
 ## 🔍 Telescope (Fuzzy Finder)
 
-### File Navigation
-- `<leader>sf` - **[S]earch [F]iles** - Find files in project
-- `<leader>sg` - **[S]earch by [G]rep** - Live grep through all files
-- `<leader>ac` - **Ack/Grep search** - Alternative grep search
-- `<leader>sw` - **[S]earch current [W]ord** - Search word under cursor
+### Content Search (like :Ag)
+- `<leader>sg` - **[S]earch by [G]rep** - Search text/regex inside all files (live updates)
+- `<leader>ac` - **Ack/Grep search** - Alternative mapping for grep search
+- `<leader>sw` - **[S]earch current [W]ord** - Search word under cursor in all files
+- `<leader>s/` - **Search in Buffer** - Fuzzy search current buffer only
+- **Supports regex**: `function.*test`, `^import`, `TODO|FIXME`, etc.
+- **Path display**: `Ctrl-p` to cycle path modes while in Telescope
+
+### File/Path Search
+- `<leader>sf` - **[S]earch [F]iles** - Find files by name (NOT contents)
 - `<leader>s.` - **Search Recent Files** - Recently opened files
 - `<leader>sn` - **[S]earch [N]eovim files** - Search Neovim config files
 - `<leader><leader>` - **Search Buffers** - Find open buffers
-- `<leader>s/` - **Search in Buffer** - Fuzzy search current buffer
 
 ### Help & Documentation
 - `<leader>sh` - **[S]earch [H]elp** - Search help documentation
@@ -23,6 +27,15 @@
 
 ### Git Integration
 - `<leader>gs` - **[G]it [S]tatus** - View git status with Telescope
+
+### Telescope Navigation
+- Arrow keys or `Ctrl-j/k` - Navigate results
+- `Enter` - Open file
+- `Ctrl-x` - Open in horizontal split
+- `Ctrl-v` - Open in vertical split
+- `Ctrl-t` - Open in new tab
+- `Ctrl-u/d` - Scroll preview up/down
+- `Ctrl-/` - Show help in Telescope
 
 ## 💡 LSP (Language Server Protocol)
 
@@ -136,13 +149,27 @@
   - Buffer words
   - File paths
 
+## 🎯 Autopairs
+
+- Automatically closes brackets, quotes, and other pairs
+- Type `(` → get `()` with cursor in middle
+- Type `{` → get `{}`
+- Type `"` → get `""`
+- Type `[` → get `[]`
+- Press `Enter` between `{}` → creates formatted block:
+  ```
+  {
+    |cursor here
+  }
+  ```
+
 ## 🧪 Testing (vim-test)
 
+- `<leader>tv` - **Test Visit** - Switch between test and implementation file
 - `<leader>tn` - **Test Nearest** - Run test nearest to cursor
 - `<leader>tf` - **Test File** - Run current test file
 - `<leader>ts` - **Test Suite** - Run entire test suite
 - `<leader>tl` - **Test Last** - Run last test
-- `<leader>tv` - **Test Visit** - Visit test file
 - Uses vimux for tmux integration
 
 ## 🚀 GitHub Copilot
@@ -160,9 +187,17 @@
 - `<leader>ww` - Switch windows
 - `<leader>wh/j/k/l` - Move to specific window direction
 
+### Navigation
+- `Ctrl-o` - Jump back to previous location
+- `Ctrl-i` - Jump forward (opposite of Ctrl-o)
+- `Ctrl-^` or `Ctrl-6` - Toggle between current and last file
+- `g;` - Go to previous edit location
+- `g,` - Go to next edit location
+
 ### General
 - `kk` - Exit insert mode (alternative to Esc)
 - `<leader>nh` - Clear search highlights
+- `<leader>fw` - Fix trailing whitespace
 - `<F8>` - Toggle Tagbar (code outline)
 
 ## 🎄 Treesitter Features
@@ -175,7 +210,12 @@
 ### Syntax Features
 - Automatic syntax highlighting
 - Smart indentation
-- Code folding (`za` toggle, `zR` open all, `zM` close all)
+- Code folding:
+  - `za` - Toggle fold at cursor
+  - `zo` / `zc` - Open/close fold
+  - `zR` / `zM` - Open/close all folds
+  - `zj` / `zk` - Navigate to next/previous fold
+  - `zi` - Toggle folding on/off globally
 
 ## 📦 Additional Utilities
 
@@ -192,7 +232,14 @@
 
 ### vim-trailing-whitespace
 - Highlights trailing whitespace in red
+- `<leader>fw` - Fix trailing whitespace
 - `:FixWhitespace` - Remove all trailing whitespace
+
+### indent-blankline
+- Shows vertical indent guidelines
+- Very subtle gray lines (customized for Gruvbox)
+- `:IBLToggle` - Toggle indent lines on/off
+- `:IBLEnable` / `:IBLDisable` - Enable/disable indent lines
 
 ### vim-unimpaired
 - `]q` / `[q` - Navigate quickfix list

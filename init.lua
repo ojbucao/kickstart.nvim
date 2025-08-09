@@ -239,6 +239,7 @@ vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = 'Move to right window' })
 vim.keymap.set('n', '<leader>wj', '<C-w>j', { desc = 'Move to lower window' })
 vim.keymap.set('n', '<leader>wk', '<C-w>k', { desc = 'Move to upper window' })
 vim.keymap.set('n', '<leader>nh', '<cmd>noh<CR>', { desc = 'Clear search highlights' })
+vim.keymap.set('n', '<leader>fw', '<cmd>FixWhitespace<CR>', { desc = 'Fix trailing whitespace' })
 vim.keymap.set('n', '<leader>lc', '<cmd>lclose<CR>', { desc = 'Close location list' })
 vim.keymap.set('n', '<leader>ln', '<cmd>lnext<CR>', { desc = 'Next location list item' })
 vim.keymap.set('n', '<leader>lp', '<cmd>lprevious<CR>', { desc = 'Previous location list item' })
@@ -520,12 +521,31 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
+        defaults = {
+          path_display = { 'truncate' }, -- Options: 'hidden', 'tail', 'absolute', 'smart', 'truncate'
+          layout_config = {
+            horizontal = {
+              preview_width = 0.55,
+              results_width = 0.8,
+            },
+            width = 0.87,
+            height = 0.80,
+          },
+          -- mappings = {
+          --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          -- },
+        },
+        pickers = {
+          find_files = {
+            path_display = { 'tail' }, -- Show only filename for find_files
+          },
+          grep_string = {
+            path_display = { 'shorten' }, -- Shorten paths for grep
+          },
+          live_grep = {
+            path_display = { 'shorten' }, -- Shorten paths for live_grep
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -1088,9 +1108,9 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
