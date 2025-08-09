@@ -1311,7 +1311,7 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       require('gruvbox').setup {
-        contrast = 'hard', -- can be "hard", "soft" or empty string
+        contrast = '', -- can be "hard", "soft" or empty string (medium/default)
         palette_overrides = {},
         overrides = {},
         dim_inactive = false,
