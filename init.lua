@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -245,8 +245,9 @@ vim.keymap.set('n', '<leader>ln', '<cmd>lnext<CR>', { desc = 'Next location list
 vim.keymap.set('n', '<leader>lp', '<cmd>lprevious<CR>', { desc = 'Previous location list item' })
 vim.keymap.set('n', '<leader>lw', '<cmd>lw<CR>', { desc = 'Show location list' })
 vim.keymap.set('n', '<leader>git', '<cmd>Git<CR>', { desc = 'Open Git fugitive' })
-vim.keymap.set('n', '<leader>cc', '<cmd>Copilot chat<CR>', { desc = 'Open Copilot Chat' })
-vim.keymap.set('n', '<leader>cp', '<cmd>Copilot panel<CR>', { desc = 'Open Copilot Panel' })
+vim.keymap.set('n', '<leader>ce', '<cmd>Copilot enable<CR>', { desc = 'Enable Copilot' })
+vim.keymap.set('n', '<leader>cd', '<cmd>Copilot disable<CR>', { desc = 'Disable Copilot' })
+vim.keymap.set('n', '<leader>cs', '<cmd>Copilot status<CR>', { desc = 'Copilot Status' })
 vim.keymap.set('n', '<F8>', '<cmd>TagbarToggle<CR>', { desc = 'Toggle Tagbar' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
@@ -389,12 +390,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>tl', '<cmd>TestLast<CR>', { desc = 'Test last' })
       vim.keymap.set('n', '<leader>tv', '<cmd>TestVisit<CR>', { desc = 'Test visit' })
 
-      -- Alternative shortcuts
-      vim.keymap.set('n', '<leader>t', '<cmd>TestNearest<CR>', { desc = 'Run nearest test' })
-      vim.keymap.set('n', '<leader>T', '<cmd>TestFile<CR>', { desc = 'Run test file' })
-      vim.keymap.set('n', '<leader>a', '<cmd>TestSuite<CR>', { desc = 'Run all tests' })
-      vim.keymap.set('n', '<leader>l', '<cmd>TestLast<CR>', { desc = 'Run last test' })
-      vim.keymap.set('n', '<leader>g', '<cmd>TestVisit<CR>', { desc = 'Go to test file' })
     end,
   },
 
@@ -579,59 +574,6 @@ require('lazy').setup({
     },
   },
 
-  -- Conform.nvim for auto-formatting
-  {
-    'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
-    cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
-        mode = '',
-        desc = '[F]ormat buffer',
-      },
-    },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        local lsp_format_opt
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          lsp_format_opt = 'never'
-        else
-          lsp_format_opt = 'fallback'
-        end
-        return {
-          timeout_ms = 500,
-          lsp_format = lsp_format_opt,
-        }
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        python = { 'isort', 'black' },
-        -- You can use 'stop_after_first' to run the first formatter that works
-        javascript = { 'prettierd', 'prettier', stop_after_first = true },
-        typescript = { 'prettierd', 'prettier', stop_after_first = true },
-        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
-        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
-        json = { 'prettier' },
-        yaml = { 'prettier' },
-        markdown = { 'prettier' },
-        html = { 'prettier' },
-        css = { 'prettier' },
-        go = { 'gofmt' },
-        rust = { 'rustfmt' },
-        ruby = { 'rubocop' },
-      },
-    },
-  },
 
   -- Lualine for statusline
   {
@@ -760,7 +702,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
+        { '<leader>t', group = '[T]est' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },

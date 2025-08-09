@@ -114,10 +114,18 @@
 - Highlights TODO, FIXME, NOTE, etc. in comments
 - `<leader>st` - Search all todos in project
 
+### Indent Lines
+- Shows subtle indent guides for better code structure visibility
+- Automatically enabled, very subtle gray lines
+
 ### Which-key
 - Shows available keybindings when you pause after pressing a key
 - `<leader>` - Wait to see all leader mappings
 - `g` - Wait to see all g mappings
+- Key groups:
+  - `<leader>s` - Search commands
+  - `<leader>t` - Test commands
+  - `<leader>h` - Git hunk operations
 
 ### Gitsigns
 - Shows git changes in the gutter
@@ -165,17 +173,11 @@
 
 ## 🧪 Testing (vim-test)
 
-- `<leader>tv` - **Test Visit** - Switch between test and implementation file
 - `<leader>tn` - **Test Nearest** - Run test nearest to cursor
 - `<leader>tf` - **Test File** - Run current test file
 - `<leader>ts` - **Test Suite** - Run entire test suite
 - `<leader>tl` - **Test Last** - Run last test
-- Alternative shortcuts:
-  - `<leader>t` - Run nearest test
-  - `<leader>T` - Run test file
-  - `<leader>a` - Run all tests
-  - `<leader>l` - Run last test
-  - `<leader>g` - Go to test file
+- `<leader>tv` - **Test Visit** - Switch between test and implementation file
 - Uses vimux for tmux integration
 - Configured for: RSpec, Minitest, Cargo test, Jest, Mocha
 
@@ -185,7 +187,9 @@
 - `Alt+]` - Next suggestion
 - `Alt+[` - Previous suggestion
 - `Alt+\` - Trigger suggestion
-- `<leader>cp` - Open Copilot panel
+- `<leader>ce` - Enable Copilot
+- `<leader>cd` - Disable Copilot
+- `<leader>cs` - Show Copilot status
 
 ## 📋 Custom Keybindings
 
@@ -315,7 +319,7 @@
 ## 📊 UI Enhancements
 
 ### Lualine (Status Bar)
-- Shows mode, git branch, diagnostics, filename, file type, position
+- Shows mode, git branch, diagnostics, filename (with path), file type, position
 - Gruvbox themed to match colorscheme
 
 ### Bufferline (Tab Bar)
@@ -330,7 +334,7 @@
 
 ## 🎨 Colorscheme
 
-- **Gruvbox** (hard contrast) - Currently active
+- **Gruvbox** (soft contrast) - Currently active
 - `:Telescope colorscheme` - Browse and preview colorschemes
 
 ## 💼 Mason (LSP/Tool Manager)
@@ -353,6 +357,16 @@
 ## 📝 Notes
 
 - `<leader>` is set to Space
+- Nerd Font support enabled (JetBrains Mono Nerd Font recommended)
 - Most mappings support dot-repeat with vim-repeat plugin
 - Use `:Telescope keymaps` to discover more mappings
 - Check `:checkhealth` for plugin status and issues
+
+## 🔧 Custom Commands
+
+- `:A` - Switch between source and spec files (Ruby)
+- `:CleanDiff` - Clean up diff output
+- `:RubocopFix` - Run Rubocop auto-fix on current file
+- `:RubocopFixSel` - Run Rubocop auto-fix on selection
+- `<leader>rf` - Rubocop fix file
+- `<leader>rs` - Rubocop fix selection (visual mode)
