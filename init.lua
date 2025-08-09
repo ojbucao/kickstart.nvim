@@ -159,12 +159,35 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.o.scrolloff = 10
+vim.o.scrolloff = 3
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- Custom settings from previous init.vim
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.softtabstop = 2
+vim.o.expandtab = true
+vim.o.autoindent = true
+vim.o.wrap = true
+vim.o.textwidth = 79
+vim.o.colorcolumn = '100'
+vim.o.showcmd = true
+vim.o.hidden = true
+vim.o.wildmenu = true
+vim.o.wildmode = 'list:longest'
+vim.o.visualbell = true
+vim.o.ruler = true
+vim.o.backspace = 'indent,eol,start'
+vim.o.laststatus = 2
+vim.o.formatoptions = 'qrn1'
+vim.o.showmatch = true
+vim.o.hlsearch = true
+vim.o.incsearch = true
+vim.opt.nrformats = ''
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -198,6 +221,32 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- Custom keybindings from previous init.vim
+vim.keymap.set('i', 'kk', '<ESC>', { desc = 'Exit insert mode with kk' })
+
+-- Vertigo configuration and keybindings
+vim.g.Vertigo_homerow = 'ashtgyneoi'
+vim.keymap.set('n', '<leader>j', ':<C-U>VertigoDown n<CR>', { silent = true, desc = 'Vertigo jump down' })
+vim.keymap.set('v', '<leader>j', ':<C-U>VertigoDown v<CR>', { silent = true, desc = 'Vertigo jump down (visual)' })
+vim.keymap.set('o', '<leader>j', ':<C-U>VertigoDown o<CR>', { silent = true, desc = 'Vertigo jump down (operator)' })
+vim.keymap.set('n', '<leader>k', ':<C-U>VertigoUp n<CR>', { silent = true, desc = 'Vertigo jump up' })
+vim.keymap.set('v', '<leader>k', ':<C-U>VertigoUp v<CR>', { silent = true, desc = 'Vertigo jump up (visual)' })
+vim.keymap.set('o', '<leader>k', ':<C-U>VertigoUp o<CR>', { silent = true, desc = 'Vertigo jump up (operator)' })
+vim.keymap.set('n', '<leader>ww', '<C-w><C-w>', { desc = 'Switch windows' })
+vim.keymap.set('n', '<leader>wh', '<C-w>h', { desc = 'Move to left window' })
+vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = 'Move to right window' })
+vim.keymap.set('n', '<leader>wj', '<C-w>j', { desc = 'Move to lower window' })
+vim.keymap.set('n', '<leader>wk', '<C-w>k', { desc = 'Move to upper window' })
+vim.keymap.set('n', '<leader>nh', '<cmd>noh<CR>', { desc = 'Clear search highlights' })
+vim.keymap.set('n', '<leader>lc', '<cmd>lclose<CR>', { desc = 'Close location list' })
+vim.keymap.set('n', '<leader>ln', '<cmd>lnext<CR>', { desc = 'Next location list item' })
+vim.keymap.set('n', '<leader>lp', '<cmd>lprevious<CR>', { desc = 'Previous location list item' })
+vim.keymap.set('n', '<leader>lw', '<cmd>lw<CR>', { desc = 'Show location list' })
+vim.keymap.set('n', '<leader>git', '<cmd>Git<CR>', { desc = 'Open Git fugitive' })
+vim.keymap.set('n', '<leader>cc', '<cmd>Copilot chat<CR>', { desc = 'Open Copilot Chat' })
+vim.keymap.set('n', '<leader>cp', '<cmd>Copilot panel<CR>', { desc = 'Open Copilot Panel' })
+vim.keymap.set('n', '<F8>', '<cmd>TagbarToggle<CR>', { desc = 'Toggle Tagbar' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -248,6 +297,56 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  
+  -- Essential plugins from previous config
+  'tpope/vim-fugitive', -- Git commands
+  'github/copilot.vim', -- GitHub Copilot
+  'tpope/vim-surround', -- Surround text objects
+  'tpope/vim-commentary', -- Comment lines
+  'tpope/vim-repeat', -- Repeat plugin commands
+  'tpope/vim-unimpaired', -- Bracket mappings
+  'bronson/vim-trailing-whitespace', -- Highlight trailing whitespace
+  'prendradjaja/vim-vertigo', -- Vertical navigation
+  
+  -- Testing plugins
+  {
+    'vim-test/vim-test',
+    dependencies = {
+      'preservim/vimux', -- For tmux integration
+    },
+    config = function()
+      -- Set test strategy - use vimux for tmux integration
+      -- Change to 'neovim' if you prefer built-in terminal
+      vim.g['test#strategy'] = 'vimux'
+      vim.g['test#ruby#rspec#executable'] = 'bundle exec rspec'
+      
+      -- Test keybindings
+      vim.keymap.set('n', '<leader>t', '<cmd>TestNearest<CR>', { desc = 'Run nearest test' })
+      vim.keymap.set('n', '<leader>T', '<cmd>TestFile<CR>', { desc = 'Run test file' })
+      vim.keymap.set('n', '<leader>a', '<cmd>TestSuite<CR>', { desc = 'Run all tests' })
+      vim.keymap.set('n', '<leader>l', '<cmd>TestLast<CR>', { desc = 'Run last test' })
+      vim.keymap.set('n', '<leader>g', '<cmd>TestVisit<CR>', { desc = 'Go to test file' })
+    end,
+  },
+  
+  -- Tmux integration for sending commands (like your old tslime setup)
+  {
+    'preservim/vimux',
+    config = function()
+      -- Vimux configuration
+      vim.g.VimuxHeight = '30'
+      vim.g.VimuxOrientation = 'v'
+      
+      -- Additional keybindings for tmux interaction
+      vim.keymap.set('n', '<leader>vp', '<cmd>VimuxPromptCommand<CR>', { desc = 'Prompt for tmux command' })
+      vim.keymap.set('n', '<leader>vl', '<cmd>VimuxRunLastCommand<CR>', { desc = 'Run last tmux command' })
+      vim.keymap.set('n', '<leader>vq', '<cmd>VimuxCloseRunner<CR>', { desc = 'Close tmux runner' })
+    end,
+  },
+  
+  -- Ruby/Rails plugins (uncomment if needed)
+  -- 'tpope/vim-rails',
+  -- 'vim-ruby/vim-ruby',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -429,9 +528,11 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<C-p>', builtin.find_files, { desc = 'Find files (FZF style)' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>ac', builtin.live_grep, { desc = 'Ack/Grep search (using Telescope)' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
@@ -977,7 +1078,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -1010,6 +1111,74 @@ require('lazy').setup({
       lazy = '💤 ',
     },
   },
+})
+
+-- Custom Functions from previous init.vim
+
+-- Function to switch between source and spec files
+function SwitchToSpec()
+  local file = vim.fn.expand('%')
+  local target
+  if string.match(file, 'spec/') then
+    -- From spec to source
+    target = string.gsub(file, '^spec/', 'app/')
+    target = string.gsub(target, '_spec%.rb$', '.rb')
+  else
+    -- From source to spec
+    target = string.gsub(file, '^app/', 'spec/')
+    target = string.gsub(target, '%.rb$', '_spec.rb')
+  end
+  vim.cmd('e ' .. target)
+end
+
+-- Command to switch between source and spec
+vim.api.nvim_create_user_command('A', SwitchToSpec, {})
+
+-- CleanDiff command
+vim.api.nvim_create_user_command('CleanDiff', '%!clean_diff.rb', {})
+
+-- RubocopFix command
+vim.api.nvim_create_user_command('RubocopFix', function()
+  vim.cmd('write')
+  vim.cmd('silent !rubocop -A %')
+  vim.cmd('edit')
+end, {})
+
+-- RubocopFixSel command for visual selection
+vim.api.nvim_create_user_command('RubocopFixSel', function(opts)
+  local start_line = opts.line1
+  local end_line = opts.line2
+  local file_path = vim.fn.shellescape(vim.fn.expand('%:p'))
+  local cmd = string.format(
+    '%d,%d! rubocop -A --stdin %s | awk \'/^=/{flag=!flag;next}flag\'',
+    start_line, end_line, file_path
+  )
+  vim.cmd(cmd)
+end, { range = true })
+
+-- Keymaps for Rubocop
+vim.keymap.set('n', '<leader>rf', '<cmd>RubocopFix<CR>', { desc = 'Run Rubocop Fix on file' })
+vim.keymap.set('x', '<leader>rs', '<cmd>RubocopFixSel<CR>', { desc = 'Run Rubocop Fix on selection' })
+
+-- Autocommands from previous init.vim
+vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
+  callback = function()
+    vim.o.cursorline = true
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
+  callback = function()
+    vim.o.cursorline = false
+  end,
+})
+
+-- Ledger file type detection
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = { '*.ldg', '*.ledger', '*.journal' },
+  callback = function()
+    vim.bo.filetype = 'ledger'
+  end,
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
