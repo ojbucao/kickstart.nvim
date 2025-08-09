@@ -333,9 +333,28 @@ require('lazy').setup({
       -- Set test strategy - use vimux for tmux integration
       -- Change to 'neovim' if you prefer built-in terminal
       vim.g['test#strategy'] = 'vimux'
-      vim.g['test#ruby#rspec#executable'] = 'bundle exec rspec'
       
-      -- Test keybindings
+      -- Ruby/Rails test configuration
+      vim.g['test#ruby#rspec#executable'] = 'bundle exec rspec'
+      vim.g['test#ruby#rspec#options'] = '--format documentation'
+      vim.g['test#ruby#minitest#executable'] = 'bundle exec rails test'
+      
+      -- Rust test configuration
+      vim.g['test#rust#cargo#executable'] = 'cargo test'
+      vim.g['test#rust#cargo#test_options'] = '-- --nocapture'
+      
+      -- JavaScript test configuration
+      vim.g['test#javascript#jest#executable'] = 'npm test'
+      vim.g['test#javascript#mocha#executable'] = 'npm test'
+      
+      -- Test keybindings (combined from both sections)
+      vim.keymap.set('n', '<leader>tn', '<cmd>TestNearest<CR>', { desc = 'Test nearest' })
+      vim.keymap.set('n', '<leader>tf', '<cmd>TestFile<CR>', { desc = 'Test file' })
+      vim.keymap.set('n', '<leader>ts', '<cmd>TestSuite<CR>', { desc = 'Test suite' })
+      vim.keymap.set('n', '<leader>tl', '<cmd>TestLast<CR>', { desc = 'Test last' })
+      vim.keymap.set('n', '<leader>tv', '<cmd>TestVisit<CR>', { desc = 'Test visit' })
+      
+      -- Alternative shortcuts
       vim.keymap.set('n', '<leader>t', '<cmd>TestNearest<CR>', { desc = 'Run nearest test' })
       vim.keymap.set('n', '<leader>T', '<cmd>TestFile<CR>', { desc = 'Run test file' })
       vim.keymap.set('n', '<leader>a', '<cmd>TestSuite<CR>', { desc = 'Run all tests' })
@@ -359,9 +378,116 @@ require('lazy').setup({
     end,
   },
   
-  -- Ruby/Rails plugins (uncomment if needed)
-  -- 'tpope/vim-rails',
-  -- 'vim-ruby/vim-ruby',
+  -- Ruby/Rails plugins
+  'tpope/vim-rails', -- Rails navigation and commands
+  'vim-ruby/vim-ruby', -- Better Ruby support
+  'tpope/vim-bundler', -- Bundler integration
+  'tpope/vim-endwise', -- Auto-end for Ruby blocks
+  
+  -- Rust plugins
+  {
+    'mrcjkb/rustaceanvim',
+    version = '^5',
+    lazy = false,
+    ft = { 'rust' },
+    config = function()
+      vim.g.rustaceanvim = {
+        tools = {
+          hover_actions = {
+            auto_focus = true,
+          },
+        },
+        server = {
+          on_attach = function(client, bufnr)
+            -- Rust-specific keymaps
+            vim.keymap.set('n', '<leader>rc', function() vim.cmd.RustLsp 'openCargo' end, { buffer = bufnr, desc = 'Open Cargo.toml' })
+            vim.keymap.set('n', '<leader>rd', function() vim.cmd.RustLsp 'openDocs' end, { buffer = bufnr, desc = 'Open docs.rs' })
+            vim.keymap.set('n', '<leader>rr', function() vim.cmd.RustLsp 'run' end, { buffer = bufnr, desc = 'Run' })
+            vim.keymap.set('n', '<leader>ra', function() vim.cmd.RustLsp 'codeAction' end, { buffer = bufnr, desc = 'Code Action' })
+            vim.keymap.set('n', 'K', function() vim.cmd.RustLsp { 'hover', 'actions' } end, { buffer = bufnr, desc = 'Hover Actions' })
+          end,
+          default_settings = {
+            ['rust-analyzer'] = {
+              cargo = {
+                allFeatures = true,
+                loadOutDirsFromCheck = true,
+                buildScripts = {
+                  enable = true,
+                },
+              },
+              checkOnSave = {
+                command = 'clippy',
+              },
+              procMacro = {
+                enable = true,
+              },
+            },
+          },
+        },
+      }
+    end,
+  },
+  {
+    'saecki/crates.nvim',
+    event = { 'BufRead Cargo.toml' },
+    config = function()
+      require('crates').setup {
+        completion = {
+          cmp = {
+            enabled = true,
+          },
+        },
+      }
+    end,
+  },
+  
+  -- JavaScript/TypeScript/HTML enhancements
+  {
+    'windwp/nvim-ts-autotag', -- Auto close/rename HTML tags
+    event = 'InsertEnter',
+    config = function()
+      require('nvim-ts-autotag').setup {
+        opts = {
+          enable_close = true,
+          enable_rename = true,
+          enable_close_on_slash = true,
+        },
+      }
+    end,
+  },
+  'pangloss/vim-javascript', -- Better JS syntax
+  'MaxMEllon/vim-jsx-pretty', -- JSX syntax
+  {
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {},
+    ft = { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
+  },
+  {
+    'vuki656/package-info.nvim', -- Show package.json dependency info
+    dependencies = 'MunifTanjim/nui.nvim',
+    config = function()
+      require('package-info').setup()
+      -- Package info keymaps
+      vim.keymap.set('n', '<leader>ns', function() require('package-info').show() end, { desc = 'Show package info' })
+      vim.keymap.set('n', '<leader>nh', function() require('package-info').hide() end, { desc = 'Hide package info' })
+      vim.keymap.set('n', '<leader>nu', function() require('package-info').update() end, { desc = 'Update package' })
+      vim.keymap.set('n', '<leader>nd', function() require('package-info').delete() end, { desc = 'Delete package' })
+      vim.keymap.set('n', '<leader>ni', function() require('package-info').install() end, { desc = 'Install package' })
+    end,
+  },
+  
+  -- Docker support
+  {
+    'dgrbrady/nvim-docker',
+    dependencies = { 'nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim' },
+    ft = { 'dockerfile', 'yaml', 'yml' },
+    keys = {
+      { '<leader>dc', '<cmd>DockerContainers<cr>', desc = 'Docker Containers' },
+      { '<leader>di', '<cmd>DockerImages<cr>', desc = 'Docker Images' },
+      { '<leader>dC', '<cmd>DockerCompose<cr>', desc = 'Docker Compose' },
+    },
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -396,6 +522,126 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
+  },
+
+  -- Conform.nvim for auto-formatting
+  {
+    'stevearc/conform.nvim',
+    event = { 'BufWritePre' },
+    cmd = { 'ConformInfo' },
+    keys = {
+      {
+        '<leader>f',
+        function()
+          require('conform').format { async = true, lsp_format = 'fallback' }
+        end,
+        mode = '',
+        desc = '[F]ormat buffer',
+      },
+    },
+    opts = {
+      notify_on_error = false,
+      format_on_save = function(bufnr)
+        -- Disable "format_on_save lsp_fallback" for languages that don't
+        -- have a well standardized coding style. You can add additional
+        -- languages here or re-enable it for the disabled ones.
+        local disable_filetypes = { c = true, cpp = true }
+        local lsp_format_opt
+        if disable_filetypes[vim.bo[bufnr].filetype] then
+          lsp_format_opt = 'never'
+        else
+          lsp_format_opt = 'fallback'
+        end
+        return {
+          timeout_ms = 500,
+          lsp_format = lsp_format_opt,
+        }
+      end,
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        -- Conform can also run multiple formatters sequentially
+        python = { 'isort', 'black' },
+        -- You can use 'stop_after_first' to run the first formatter that works
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettier' },
+        yaml = { 'prettier' },
+        markdown = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        go = { 'gofmt' },
+        rust = { 'rustfmt' },
+        ruby = { 'rubocop' },
+      },
+    },
+  },
+
+  -- Lualine for statusline
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('lualine').setup {
+        options = {
+          theme = 'gruvbox',
+          component_separators = '|',
+          section_separators = '',
+        },
+        sections = {
+          lualine_a = { 'mode' },
+          lualine_b = { 'branch', 'diff', 'diagnostics' },
+          lualine_c = { { 'filename', path = 1 } },
+          lualine_x = { 'encoding', 'fileformat', 'filetype' },
+          lualine_y = { 'progress' },
+          lualine_z = { 'location' },
+        },
+      }
+    end,
+  },
+
+  -- Bufferline for visual tabs
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    dependencies = 'nvim-tree/nvim-web-devicons',
+    config = function()
+      require('bufferline').setup {
+        options = {
+          mode = 'buffers',
+          separator_style = 'slant',
+          always_show_bufferline = false,
+          show_buffer_close_icons = true,
+          show_close_icon = true,
+          color_icons = true,
+          diagnostics = 'nvim_lsp',
+          diagnostics_indicator = function(count, level)
+            local icon = level:match 'error' and ' ' or ' '
+            return ' ' .. icon .. count
+          end,
+          offsets = {
+            {
+              filetype = 'neo-tree',
+              text = 'File Explorer',
+              text_align = 'left',
+              separator = true,
+            },
+          },
+        },
+      }
+      -- Bufferline keymaps
+      vim.keymap.set('n', '<S-h>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Prev Buffer' })
+      vim.keymap.set('n', '<S-l>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Buffer' })
+      vim.keymap.set('n', '[b', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Prev Buffer' })
+      vim.keymap.set('n', ']b', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Buffer' })
+      vim.keymap.set('n', '<leader>bp', '<cmd>BufferLineTogglePin<cr>', { desc = 'Toggle Pin' })
+      vim.keymap.set('n', '<leader>bP', '<cmd>BufferLineGroupClose ungrouped<cr>', { desc = 'Delete Non-Pinned Buffers' })
+      vim.keymap.set('n', '<leader>bo', '<cmd>BufferLineCloseOthers<cr>', { desc = 'Delete Other Buffers' })
+      vim.keymap.set('n', '<leader>br', '<cmd>BufferLineCloseRight<cr>', { desc = 'Delete Buffers to the Right' })
+      vim.keymap.set('n', '<leader>bl', '<cmd>BufferLineCloseLeft<cr>', { desc = 'Delete Buffers to the Left' })
+      vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete Buffer' })
+    end,
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -806,18 +1052,58 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
+        -- Ruby/Rails
+        solargraph = {
+          settings = {
+            solargraph = {
+              diagnostics = true,
+              formatting = true,
+            },
+          },
+        },
+        rubocop = {}, -- Ruby linter/formatter
+        
+        -- Rust (handled by rustaceanvim, but keeping rust_analyzer config for completeness)
+        -- rust_analyzer is configured via rustaceanvim plugin
+        
+        -- JavaScript/TypeScript
+        ts_ls = {
+          settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = 'all',
+                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
+            },
+          },
+        },
+        eslint = {
+          settings = {
+            workingDirectory = { mode = 'auto' },
+          },
+        },
+        
+        -- HTML/CSS
+        html = {},
+        cssls = {},
+        emmet_ls = {
+          filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less' },
+        },
+        
+        -- JSON
+        jsonls = {},
+        
+        -- YAML
+        yamlls = {},
+        
+        -- Docker
+        dockerls = {},
+        docker_compose_language_service = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -850,7 +1136,12 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua', -- Lua formatter
+        'prettier', -- JS/TS/HTML/CSS formatter
+        'black', -- Python formatter
+        'isort', -- Python import sorter
+        'rubocop', -- Ruby formatter/linter
+        'rustfmt', -- Rust formatter (installed via rustup usually)
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1078,7 +1369,10 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 
+        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
+        'ruby', 'rust', 'javascript', 'typescript', 'tsx', 'json', 'yaml', 'css', 'scss', 'toml', 'dockerfile'
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {

@@ -170,7 +170,14 @@
 - `<leader>tf` - **Test File** - Run current test file
 - `<leader>ts` - **Test Suite** - Run entire test suite
 - `<leader>tl` - **Test Last** - Run last test
+- Alternative shortcuts:
+  - `<leader>t` - Run nearest test
+  - `<leader>T` - Run test file
+  - `<leader>a` - Run all tests
+  - `<leader>l` - Run last test
+  - `<leader>g` - Go to test file
 - Uses vimux for tmux integration
+- Configured for: RSpec, Minitest, Cargo test, Jest, Mocha
 
 ## 🚀 GitHub Copilot
 
@@ -248,6 +255,79 @@
 - `]t` / `[t` - Navigate tabs
 - `]p` / `[p` - Paste with proper indentation
 
+### Vimux (Tmux Integration)
+- `<leader>vp` - Prompt for tmux command
+- `<leader>vl` - Run last tmux command
+- `<leader>vq` - Close tmux runner
+
+## 💎 Ruby/Rails
+
+- **vim-rails** Navigation:
+  - `:A` - Alternate file (controller ↔ view)
+  - `:R` - Related file
+  - `:Emodel`, `:Eview`, `:Econtroller` - Jump to MVC files
+- **vim-endwise** - Auto-adds `end` to blocks
+- **Solargraph** LSP provides intellisense
+
+## 🦀 Rust
+
+- `<leader>rc` - Open Cargo.toml
+- `<leader>rd` - Open docs.rs documentation
+- `<leader>rr` - Run project
+- `<leader>ra` - Rust code actions
+- `K` - Hover with actions (in Rust files)
+- **crates.nvim** - Shows version info in Cargo.toml
+- Clippy runs on save automatically
+
+## 🌐 JavaScript/TypeScript/HTML
+
+- **Auto-tag** - Auto-close and rename HTML tags
+- **Package Info** (in package.json):
+  - `<leader>ns` - Show package versions
+  - `<leader>nh` - Hide package info
+  - `<leader>nu` - Update package
+  - `<leader>nd` - Delete package
+  - `<leader>ni` - Install package
+- **typescript-tools.nvim** - Enhanced TS support with inlay hints
+- ESLint and Prettier configured
+
+## 🐳 Docker
+
+- `<leader>dc` - View Docker containers
+- `<leader>di` - View Docker images
+- `<leader>dC` - Docker Compose commands
+- LSP support for Dockerfile and docker-compose.yml
+- Syntax highlighting for Dockerfiles
+
+## 🔧 Auto-formatting (conform.nvim)
+
+- `<leader>f` - Format current buffer
+- **Auto-formats on save** for:
+  - Ruby: rubocop
+  - Rust: rustfmt
+  - JavaScript/TypeScript: Prettier
+  - Python: Black + isort
+  - Lua: stylua
+  - Go: gofmt
+  - HTML/CSS/JSON/YAML: Prettier
+- Disable for C/C++ by default
+
+## 📊 UI Enhancements
+
+### Lualine (Status Bar)
+- Shows mode, git branch, diagnostics, filename, file type, position
+- Gruvbox themed to match colorscheme
+
+### Bufferline (Tab Bar)
+- `Shift-h` / `Shift-l` - Previous/next buffer
+- `[b` / `]b` - Alternative buffer navigation
+- `<leader>bd` - Delete current buffer
+- `<leader>bp` - Pin/unpin buffer
+- `<leader>bo` - Close other buffers
+- `<leader>br` - Close buffers to the right
+- `<leader>bl` - Close buffers to the left
+- Shows LSP diagnostics in tabs
+
 ## 🎨 Colorscheme
 
 - **Gruvbox** (hard contrast) - Currently active
@@ -259,6 +339,16 @@
 - `:MasonInstall <tool>` - Install language server/tool
 - `:MasonUninstall <tool>` - Uninstall tool
 - `:MasonUpdate` - Update all tools
+
+### Configured Language Servers:
+- **Ruby**: solargraph, rubocop
+- **Rust**: rust-analyzer (via rustaceanvim)
+- **JavaScript/TypeScript**: ts_ls, eslint
+- **HTML/CSS**: html, cssls, emmet_ls
+- **Docker**: dockerls, docker_compose_language_service
+- **JSON**: jsonls
+- **YAML**: yamlls
+- **Lua**: lua_ls
 
 ## 📝 Notes
 
