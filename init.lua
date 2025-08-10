@@ -167,26 +167,22 @@ vim.o.scrolloff = 3
 vim.o.confirm = true
 
 -- Custom settings from previous init.vim
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-vim.o.softtabstop = 2
-vim.o.expandtab = true
-vim.o.autoindent = true
-vim.o.wrap = true
-vim.o.textwidth = 79
-vim.o.colorcolumn = '100'
-vim.o.showcmd = true
-vim.o.hidden = true
-vim.o.wildmenu = true
-vim.o.wildmode = 'list:longest'
-vim.o.visualbell = true
-vim.o.ruler = true
-vim.o.backspace = 'indent,eol,start'
-vim.o.laststatus = 2
-vim.o.formatoptions = 'qrn1'
-vim.o.showmatch = true
-vim.o.hlsearch = true
-vim.o.incsearch = true
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.opt.wrap = true
+vim.opt.textwidth = 79
+vim.opt.colorcolumn = '100'
+vim.opt.showcmd = true
+vim.opt.wildmode = 'list:longest'
+vim.opt.backspace = 'indent,eol,start'
+vim.opt.laststatus = 2
+vim.opt.formatoptions = 'qrn1'
+vim.opt.showmatch = true
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
 vim.opt.nrformats = ''
 
 -- [[ Basic Keymaps ]]
@@ -301,13 +297,13 @@ require('lazy').setup({
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
   -- Essential plugins from previous config
-  'tpope/vim-fugitive', -- Git commands
+  {
+    'tpope/vim-fugitive',
+    cmd = { 'G', 'Git', 'Gdiffsplit', 'Gblame', 'Gread', 'Gwrite', 'Ggrep', 'GMove', 'GDelete', 'GBrowse' },
+  },
   'github/copilot.vim', -- GitHub Copilot
-  'tpope/vim-surround', -- Surround text objects
-  'tpope/vim-commentary', -- Comment lines
   'tpope/vim-repeat', -- Repeat plugin commands
   'tpope/vim-unimpaired', -- Bracket mappings
-  'bronson/vim-trailing-whitespace', -- Highlight trailing whitespace
   'prendradjaja/vim-vertigo', -- Vertical navigation
 
   -- Flash.nvim for word/character jumping
@@ -362,6 +358,7 @@ require('lazy').setup({
   -- Testing plugins
   {
     'vim-test/vim-test',
+    cmd = { 'TestNearest', 'TestFile', 'TestSuite', 'TestLast', 'TestVisit' },
     dependencies = {
       'preservim/vimux', -- For tmux integration
     },
@@ -469,7 +466,7 @@ require('lazy').setup({
   },
   {
     'saecki/crates.nvim',
-    event = { 'BufRead Cargo.toml' },
+    ft = 'toml',
     config = function()
       require('crates').setup {
         completion = {
@@ -496,7 +493,6 @@ require('lazy').setup({
     end,
   },
   'pangloss/vim-javascript', -- Better JS syntax
-  'MaxMEllon/vim-jsx-pretty', -- JSX syntax
   {
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
@@ -505,6 +501,7 @@ require('lazy').setup({
   },
   {
     'vuki656/package-info.nvim', -- Show package.json dependency info
+    ft = 'json',
     dependencies = 'MunifTanjim/nui.nvim',
     config = function()
       require('package-info').setup()
@@ -657,7 +654,7 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    event = 'VeryLazy',
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.o.timeoutlen
@@ -1161,7 +1158,7 @@ require('lazy').setup({
 
   { -- Autoformat
     'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
+    event = { 'BufReadPre', 'BufWritePre' },
     cmd = { 'ConformInfo' },
     keys = {
       {
@@ -1321,7 +1318,7 @@ require('lazy').setup({
   },
 
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  { 'folke/todo-comments.nvim', event = 'BufReadPre', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -1340,6 +1337,17 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
+
+      -- Comment lines (replaces vim-commentary)
+      -- gcc - comment line, gc{motion} - comment motion
+      require('mini.comment').setup()
+
+      -- Highlight and clean trailing whitespace
+      require('mini.trailspace').setup()
+      -- Create command to match your existing keybinding
+      vim.api.nvim_create_user_command('FixWhitespace', function()
+        require('mini.trailspace').trim()
+      end, {})
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -1423,7 +1431,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
